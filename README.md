@@ -1,2 +1,8 @@
 # ITC-UML
-IT College Unified Modeling Language tasks
+
+Задания по UML для Колледжа Цифровых Технологий
+
+## Типы файлов
+
+1. **png** - визуальное представление диаграмм.
+2. **txt** - текстовое представление UML. Для описания схем и генерации png я использовал сайт [planttext.com](https://www.planttext.com/).
