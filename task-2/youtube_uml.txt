@@ -1,0 +1,118 @@
+@startuml
+
+enum ChannelCountry {
+  RU
+  US
+  UK
+  ...
+}
+
+enum LikeType {
+  LIKE
+  DISLIKE
+}
+
+enum LikeTarget {
+  VIDEO
+  COMMENT
+}
+
+class User {
+  + userId: UUID
+  + username: String
+  + password: String
+  
+  + register()
+  + login()
+}
+
+class Channel {
+  + channelId: UUID
+  + name: String
+  + description: String
+  + country: ChannelCountry
+  
+  + createChannel()
+  + deleteChannel()
+  + getInfo()
+}
+
+class Subscription {
+  + subscriptionId: UUID
+  + userId: UUID
+  + channelId: UUID
+  + subscriptionTime: DateTime
+  
+  + subscribe()
+  + unsubscribe()
+}
+
+class Video {
+  + videoId: UUID
+  + slug: String
+  + title: String
+  + description: String
+  + createdAt: DateTime
+  
+  + uploadVideo()
+  + deleteVideo()
+  + viewVideo()
+  + searchVideos()
+}
+
+class View {
+  + viewId: UUID
+  + videoId: UUID
+  + userId: UUID
+}
+
+class Playlist {
+  + playlistId: UUID
+  + name: String
+  + userId: UUID
+  
+  + createPlaylist()
+  + viewPlaylist()
+}
+
+class Comment {
+  + commentId: UUID
+  + videoId: UUID
+  + userId: UUID
+  + body: String
+  
+  + sendComment()
+  + updateComment()
+}
+
+class Like {
+  + likeId: UUID
+  + userId: UUID
+  + targetType: LikeTarget
+  + targetId: UUID
+  + type: LikeType
+  
+  + like()
+  + dislike()
+  + removeLike()
+}
+
+User "1" -- "0..*" Channel
+User "1" -- "0..*" Playlist
+User "1" -- "0..*" Comment
+User "0..1" -- "0..*" View
+User "1" -- "0..*" Subscription
+User "1" -- "0..*" Like
+
+Channel "1" -- "0..*" Subscription
+Channel "1" -- "0..*" Video
+
+Video "1" -- "0..*" Comment
+Video "1" -- "0..*" Like
+Video "1" -- "0..*" View
+Video "1" -- "1..*" Playlist
+
+Comment "1" -- "0..*" Comment
+Comment "1" -- "0..*" Like
+
+@enduml
