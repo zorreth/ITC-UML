@@ -1,0 +1,35 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Пользователь")
+
+System_Boundary(dropbox, "Dropbox") {
+  Container(web, "Web App", "Edison", "Одностраничное веб-приложение")
+  Container(desktop, "Desktop App", "Windows/MacOS/Linux", "Приложение для компьютеров")
+  Container(mobile, "Mobile App", "iOS/Android", "Мобильное приложение")
+  
+  Container(api, "Backend API", "Python", "Бизнес-логика")
+  
+  ContainerDb(db, "База данных", "MySQL", "Метаданные файлов и пользователей")
+  
+  Container(static_server, "Сервер статических файлов", "nginx", "HTML, CSS, JS, т.д.")
+  Container(storage, "Объектное хранилище", "AWS S3", "Файлы пользователей")
+}
+
+Rel(user, static_server, "Получает UI")
+
+Rel(user, web, "Использует")
+Rel(user, desktop, "Использует")
+Rel(user, mobile, "Использует")
+
+Rel(static_server, web, "Отправляет")
+
+Rel(web, api, "Использует", "JSON/HTTP")
+Rel(desktop, api, "Использует", "JSON/HTTP")
+Rel(mobile, api, "Использует", "JSON/HTTP")
+
+Rel(api, db, "Читает/пишет")
+Rel(api, storage, "Хранит файлы")
+
+@enduml
