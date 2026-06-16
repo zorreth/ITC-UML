@@ -1,0 +1,18 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "Пользователь")
+Person(admin, "Администратор")
+
+System(dropbox, "Dropbox", "Облачное хранилище файлов")
+
+System_Ext(oauth, "OAuth Provider", "Google / Apple")
+
+Rel(user, dropbox, "Работает с файлами")
+Rel(admin, dropbox, "Управляет пользователями и системой")
+
+Rel(user, oauth, "Выполняет вход через сторонний аккаунт")
+Rel(oauth, dropbox, "Передаёт токен авторизации")
+
+@enduml

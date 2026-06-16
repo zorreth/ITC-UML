@@ -1,0 +1,81 @@
+@startuml
+
+package "auth" {
+  class AuthService {
+    +login(email, password)
+    +register(email, password)
+    +verifyToken(token)
+  }
+  
+  class UserRepository {
+    +findByEmail()
+    +save()
+  }
+}
+
+package "files" {
+  class FileService {
+    +upload(file)
+    +download(fileId)
+    +delete(fileId)
+    +move(fileId, folderId)
+    +createShareLink(fileId)
+  }
+  
+  class FileRepository {
+    +saveFileMetadata()
+    +getFile()
+  }
+}
+
+package "sharing" {
+  class SharingService {
+    +createShareLink()
+  }
+}
+
+package "sync" {
+  class SyncService {
+    +syncUserDevices()
+  }
+}
+
+package "models" {
+  class User {
+    +id: UUID
+    +email: String
+    +passwordHash: String
+    +createdAt: DateTime
+  }
+  
+  class File {
+    +id: UUID
+    +name: String
+    +size: Long
+    +ownerId: UUID
+    +storagePath: String
+    +createdAt: DateTime
+    +updatedAt: DateTime
+  }
+  
+  class Folder {
+    +id: UUID
+    +name: String
+    +ownerId: UUID
+  } 
+}
+
+AuthService --> UserRepository
+
+FileService --> FileRepository
+
+SharingService --> File
+FileService --> File
+
+AuthService --> User
+FileService --> Folder
+
+SyncService --> File
+SyncService --> Folder
+
+@enduml

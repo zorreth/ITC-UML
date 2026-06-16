@@ -1,0 +1,56 @@
+@startuml
+
+enum Plan {
+  plus
+  standard
+  advanced
+  basic
+  enterprise
+}
+
+class User {
+  +id: UUID
+  +email: string
+  +passwordHash: string
+  +name: string
+  +plan: Plan
+  +createdAt: Date
+}
+
+class File {
+  +id: UUID
+  +name: string
+  +size: long
+  +mimeType: string
+  +createdAt: Date
+  +updatedAt: Date
+  +upload()
+  +download()
+  +delete()
+}
+
+class Folder {
+  +id: UUID
+  +name: string
+  +createdAt: Date
+  +create()
+  +delete()
+}
+
+class ShareLink {
+  +id: UUID
+  +token: string
+  +expiresAt: Date
+  +generate()
+  +revoke()
+}
+
+User "1" --> "*" File : owns
+User "1" --> "*" Folder : owns
+
+Folder "1" --> "*" File : contains
+Folder "1" --> "*" Folder : nested
+
+File "1" --> "*" ShareLink : shared with
+
+@enduml

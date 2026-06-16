@@ -1,0 +1,23 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(api, "Backend API") {
+  Component(auth, "Auth Service", "JWT / OAuth", "Аутентификация пользователей")
+  Component(files, "File Service", "Service", "Работа с файлами пользователей")
+  Component(share, "Sharing Service", "Service", "Общий доступ к файлам")
+}
+
+ContainerDb(db, "База данных", "MySQL", "Метаданные файлов и пользователей")
+Container(storage, "Объектное хранилище", "AWS S3", "Файлы пользователей")
+
+System_Ext(oauth, "OAuth Provider", "Google / Apple")
+
+Rel(auth, oauth, "Проверка токена")
+
+Rel(auth, db, "Чтение/запись пользователей")
+Rel(files, db, "Метаданные файлов")
+Rel(files, storage, "Хранение файлов")
+Rel(share, db, "Проверка прав доступа")
+
+@enduml
