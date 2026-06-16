@@ -1,0 +1,39 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title Carsharing Service - Component Diagram (API Application)
+
+Container(mobile_app, "Mobile App", "iOS / Android", "Used by customers")
+Container(admin_spa, "Admin Web Application", "React (SPA)", "Used by administrators")
+ContainerDb(db, "Database", "PostgreSQL", "Stores users, vehicles, bookings and invoices")
+
+System_Ext(payment, "Payment Service", "Processes customer payments")
+System_Ext(maps, "Maps & Navigation Service", "Provides location and routing data")
+System_Ext(identity, "Identity Verification Service", "Verifies user identity")
+System_Ext(vehicle, "Vehicle Service", "Vehicle status and remote control")
+
+Container_Boundary(api, "API Application") {
+    Component(booking, "Booking Component", "Spring Bean", "Search, booking and trip logic; calculates costs")
+    Component(account, "Account Component", "Spring Bean", "Registration, login and user profiles")
+    Component(fleet, "Vehicle Component", "Spring Bean", "Vehicle state and lock/unlock commands")
+    Component(repos, "Data Access", "Spring Data JPA", "Reads from and writes to the database")
+}
+
+Rel(mobile_app, booking, "Books and unlocks vehicles", "JSON/HTTPS")
+Rel(mobile_app, account, "Registers and logs in", "JSON/HTTPS")
+Rel(admin_spa, fleet, "Manages vehicles", "JSON/HTTPS")
+Rel(admin_spa, account, "Manages users", "JSON/HTTPS")
+
+Rel(booking, fleet, "Reserves and commands vehicles")
+Rel(booking, account, "Checks customer account")
+
+Rel(booking, repos, "Reads/writes")
+Rel(account, repos, "Reads/writes")
+Rel(fleet, repos, "Reads/writes")
+Rel(repos, db, "Reads from and writes to", "SQL/TCP")
+
+Rel(booking, payment, "Processes payments using", "JSON/HTTPS")
+Rel(booking, maps, "Retrieves locations and routes using", "JSON/HTTPS")
+Rel(account, identity, "Verifies identity using", "JSON/HTTPS")
+Rel(fleet, vehicle, "Sends lock/unlock commands to", "JSON/HTTPS")
+@enduml

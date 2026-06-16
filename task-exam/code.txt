@@ -1,0 +1,45 @@
+@startuml
+title Carsharing Service - Code Diagram (Booking Component)
+
+class BookingService {
+  +searchVehicles(query)
+  +createBooking(customerId, vehicleId)
+  +unlock(bookingId)
+  +endTrip(bookingId)
+}
+
+class Booking {
+  -id: UUID
+  -customerId: UUID
+  -vehicleId: UUID
+  -status: BookingStatus
+  -startTime: Instant
+  -endTime: Instant
+}
+
+interface BookingRepository {
+  +save(booking)
+  +findById(id)
+}
+
+interface PaymentGateway {
+  +charge(customerId, amount)
+}
+
+interface MapsGateway {
+  +locate(vehicleId): Location
+  +route(from, to): Route
+}
+
+interface VehicleService {
+  +lock(vehicleId): void
+  +unlock(vehicleId): void
+}
+
+BookingService --> Booking : creates and manages
+BookingService --> BookingRepository : persists via
+BookingService --> PaymentGateway : charges via
+BookingService --> MapsGateway : locates via
+BookingService --> VehicleService : commands via
+
+@enduml

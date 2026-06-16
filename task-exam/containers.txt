@@ -1,0 +1,39 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Carsharing Service - Container Diagram
+
+Person(customer, "Customer", "Uses the service to find, book and unlock cars")
+Person(admin, "Administrator", "Manages vehicles and users")
+
+System_Boundary(carsharing, "Carsharing Service") {
+    Container(mobile_app, "Mobile App", "iOS / Android", "Lets customers search, book, unlock and pay for vehicles")
+    Container(admin_spa, "Admin Web Application", "React (SPA)", "Lets administrators manage vehicles, users and bookings")
+    Container(api, "API Application", "Java / Spring Boot", "Provides booking, billing and account functionality via a REST/JSON API")
+    ContainerDb(db, "Database", "PostgreSQL", "Stores users, vehicles, bookings and invoices")
+}
+
+System_Ext(payment, "Payment Service", "Processes customer payments")
+System_Ext(maps, "Maps & Navigation Service", "Provides location and routing data")
+System_Ext(identity, "Identity Verification Service", "Verifies driver licenses and user identity")
+System_Ext(vehicle, "Vehicle Service", "Provides vehicle status, location and remote control")
+
+' People to front-ends
+Rel(customer, mobile_app, "Searches, books and unlocks vehicles", "HTTPS")
+Rel(admin, admin_spa, "Manages vehicles and users", "HTTPS")
+
+' Front-ends to API
+Rel(mobile_app, api, "Makes API calls to", "JSON/HTTPS")
+Rel(admin_spa, api, "Makes API calls to", "JSON/HTTPS")
+
+' API to database
+Rel(api, db, "Reads from and writes to", "SQL/TCP")
+
+' API to external systems
+Rel(api, payment, "Processes payments using", "JSON/HTTPS")
+Rel(api, maps, "Retrieves locations and routes using", "JSON/HTTPS")
+Rel(api, identity, "Verifies customer identity using", "JSON/HTTPS")
+Rel(api, vehicle, "Locks/unlocks vehicles, receives telemetry", "JSON/HTTPS")
+
+SHOW_LEGEND()
+@enduml

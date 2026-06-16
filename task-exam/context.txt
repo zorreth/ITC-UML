@@ -1,0 +1,28 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Carsharing Service - System Context Diagram
+
+Person(customer, "Customer", "Uses the service to find, book and unlock cars")
+
+Person(admin, "Administrator", "Manages vehicles and users")
+
+System(carsharing, "Carsharing Service", "Platform for booking and managing shared vehicles")
+
+System_Ext(payment, "Payment Service", "Processes customer payments")
+
+System_Ext(maps, "Maps & Navigation Service", "Provides location and routing data")
+
+System_Ext(identity, "Identity Verification Service", "Verifies driver licenses and user identity")
+
+System_Ext(vehicle, "Vehicle Service", "Provides vehicle status, location and remote control")
+
+Rel(customer, carsharing, "Searches, books and unlocks vehicles")
+Rel(admin, carsharing, "Manages system")
+
+Rel(carsharing, payment, "Processes payments")
+Rel(carsharing, maps, "Retrieves vehicle locations and routes")
+Rel(carsharing, identity, "Verifies customer identity")
+Rel(carsharing, vehicle, "Locks/unlocks vehicles, receives telemetry")
+
+@enduml
